@@ -58,6 +58,7 @@ export default function Step1ClientType({ initialData, onNext }: Props) {
       if (startsWith9909 || !isRussia) {
         setIsResident(false);
         setIsCurResident(false);
+        setIsClientVed(true)
       } else {
         setIsResident(true);
         setIsCurResident(true);
