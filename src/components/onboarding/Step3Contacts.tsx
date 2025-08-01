@@ -3,8 +3,10 @@ import {
   Box,
   TextField,
   Typography,
-  Button
+  Button,
+  IconButton
 } from '@mui/material';
+import { Add, Remove } from '@mui/icons-material';
 import { OnboardingData } from './OnboardingFlow';
 
 type AddressKey = 'mainAddress' | 'factAddress' | 'postAddress';
@@ -16,8 +18,12 @@ interface Props {
 }
 
 export default function Step3Contacts({ initialData, onNext, onBack }: Props) {
-  const [phone, setPhone] = useState(initialData.phone || '');
-  const [email, setEmail] = useState(initialData.email || '');
+  const [phones, setPhones] = useState<string[]>(
+    initialData.phone ? (Array.isArray(initialData.phone) ? initialData.phone : [initialData.phone]) : ['']
+  );
+  const [emails, setEmails] = useState<string[]>(
+    initialData.email ? (Array.isArray(initialData.email) ? initialData.email : [initialData.email]) : ['']
+  );
 
   const [addresses, setAddresses] = useState<Partial<OnboardingData>>({
     mainAddress: initialData.mainAddress || {},
@@ -150,8 +156,8 @@ export default function Step3Contacts({ initialData, onNext, onBack }: Props) {
 
   const handleSubmit = () => {
     onNext({
-      phone,
-      email,
+      phone: phones,
+      email: emails,
       ...addresses
     });
   };
@@ -163,22 +169,53 @@ export default function Step3Contacts({ initialData, onNext, onBack }: Props) {
       </Typography>
 
       {/* Контакты */}
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 4 }}>
-        <TextField
-          label="Телефон"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          fullWidth
-          sx={{ flex: '0 1 48%' }}
-        />
-        <TextField
-          label="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          fullWidth
-          sx={{ flex: '0 1 48%' }}
-        />
-      </Box>
+      <Typography variant="subtitle1" sx={{ mb: 1 }}>
+        Телефоны
+      </Typography>
+      {phones.map((phone, index) => (
+        <Box key={index} sx={{ display: 'flex', gap: 1, mb: 2 }}>
+          <TextField
+            label={`Телефон #${index + 1}`}
+            value={phone}
+            onChange={(e) => {
+              const updated = [...phones];
+              updated[index] = e.target.value;
+              setPhones(updated);
+            }}
+            fullWidth
+          />
+          <IconButton onClick={() => setPhones(phones.filter((_, i) => i !== index))}>
+            <Remove />
+          </IconButton>
+        </Box>
+      ))}
+      <Button onClick={() => setPhones([...phones, ''])} startIcon={<Add />} variant="outlined" sx={{ mb: 3 }}>
+        Добавить телефон
+      </Button>
+
+      <Typography variant="subtitle1" sx={{ mb: 1 }}>
+        Email
+      </Typography>
+      {emails.map((email, index) => (
+        <Box key={index} sx={{ display: 'flex', gap: 1, mb: 2 }}>
+          <TextField
+            label={`Email #${index + 1}`}
+            value={email}
+            onChange={(e) => {
+              const updated = [...emails];
+              updated[index] = e.target.value;
+              setEmails(updated);
+            }}
+            fullWidth
+          />
+          <IconButton onClick={() => setEmails(emails.filter((_, i) => i !== index))}>
+            <Remove />
+          </IconButton>
+        </Box>
+      ))}
+      <Button onClick={() => setEmails([...emails, ''])} startIcon={<Add />} variant="outlined" sx={{ mb: 4 }}>
+        Добавить email
+      </Button>
 
       {/* Адреса */}
       {renderAddressBlock('Юридический адрес', 'mainAddress')}

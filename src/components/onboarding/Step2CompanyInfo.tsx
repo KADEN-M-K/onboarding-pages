@@ -37,7 +37,7 @@ export default function Step2CompanyInfo({ initialData, onNext, onBack }: Props)
     onNext({ ...form, additionalOkved });
   };
 
-  const renderInput = (label: string, key: keyof OnboardingData, half = false) => (
+  const renderInput = (label: string, key: keyof OnboardingData, half = false, isDate = false) => (
     <Box sx={{ flex: half ? '0 1 48%' : '1 1 100%' }}>
       <TextField
         label={label}
@@ -45,6 +45,7 @@ export default function Step2CompanyInfo({ initialData, onNext, onBack }: Props)
         onChange={(e) => handleChange(key, e.target.value)}
         fullWidth
         sx={{ mb: 2 }}
+        placeholder={isDate ? 'ДД.ММ.ГГГГ' : undefined}
       />
     </Box>
   );
@@ -55,14 +56,28 @@ export default function Step2CompanyInfo({ initialData, onNext, onBack }: Props)
         Реквизиты организации
       </Typography>
 
+      {/* Наименования */}
+      <Typography variant="subtitle1" sx={{ mt: 1 }}>
+        Наименование организации
+      </Typography>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+        {renderInput('Краткое наименование (RU)', 'name', true)}
+        {renderInput('Полное наименование (RU)', 'fullName', true)}
+        {renderInput('Краткое наименование (EN)', 'nameEn', true)}
+        {renderInput('Полное наименование (EN)', 'fullNameEn', true)}
+      </Box>
+
+      <Typography variant="subtitle1" sx={{ mt: 1 }}>
+        Сведения о регистрации
+      </Typography>
       {/* Реквизиты */}
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
-        {renderInput('Номер в реестре', 'registryNumber', true)}
-        {renderInput('Код ИФНС (КИО)', 'kio', true)}
-        {renderInput('Дата постановки на учёт', 'taxRegistryDate', true)}
-        {renderInput('Дата регистрации', 'registryDate', true)}
+        {renderInput('Регистрационный номер в стране регистрации', 'registryNumber', true)}
+        {renderInput('КИО', 'kio', true)}
+        {renderInput('Дата постановки на учёт', 'taxRegistryDate', true, true)}
+        {renderInput('Дата регистрации', 'registryDate', true, true)}
         {renderInput('КПП', 'kpp', true)}
-        {renderInput('КПП (крупный налогоплательщик)', 'largeKpp', true)}
+        {renderInput('КПП крупнейшего налогоплательщика', 'largeKpp', true)}
       </Box>
 
       {/* Классификаторы */}
@@ -100,17 +115,6 @@ export default function Step2CompanyInfo({ initialData, onNext, onBack }: Props)
         <Button onClick={addOkvedField} startIcon={<Add />} variant="outlined" sx={{ alignSelf: 'flex-start' }}>
           Добавить ОКВЭД
         </Button>
-      </Box>
-
-      {/* Наименования */}
-      <Typography variant="subtitle1" sx={{ mt: 3 }}>
-        Наименование организации
-      </Typography>
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
-        {renderInput('Краткое наименование (RU)', 'name', true)}
-        {renderInput('Полное наименование (RU)', 'fullName', true)}
-        {renderInput('Краткое наименование (EN)', 'nameEn', true)}
-        {renderInput('Полное наименование (EN)', 'fullNameEn', true)}
       </Box>
 
       {/* Навигация */}

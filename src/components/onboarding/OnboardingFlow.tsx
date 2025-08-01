@@ -62,8 +62,8 @@ export type OnboardingData = {
   professionalLicenseNumber?: string;
   professionalLicenseIssueDate?: Date;
 
-  email?: string;
-  phone?: string;
+  email?: string[];
+  phone?: string[];
 
   mainAddress?: ClientAddress;
   factAddress?: ClientAddress;
